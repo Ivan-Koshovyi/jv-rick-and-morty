@@ -8,6 +8,7 @@ import mate.academy.rickandmorty.dto.PersonDto;
 import mate.academy.rickandmorty.mapper.PersonMapper;
 import mate.academy.rickandmorty.model.Person;
 import mate.academy.rickandmorty.repository.PersonRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,9 +25,18 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonDto getRandomPerson() {
+        long count = personRepository.count();
+        if (count == 0) {
+            throw new IllegalStateException("No persons found");
+        }
         Random random = new Random();
-        int i = random.nextInt(personRepository.findAll().size());
-        Person person = personRepository.findAll().get(i);
+        int index = random.nextInt((int) count);
+
+        Person person = personRepository
+                .findAll(PageRequest.of(index, 1))
+                .getContent()
+                .get(0);
+
         return personMapper.toDto(person);
     }
 

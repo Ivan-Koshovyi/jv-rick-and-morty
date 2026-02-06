@@ -20,6 +20,6 @@ public class DataLoader implements CommandLineRunner {
         }
 
         System.out.println("Database empty. Loading data from API...");
-        rickAndMortyApiClient.getInfo();
+        rickAndMortyApiClient.getAllCharacters();
     }
 }
